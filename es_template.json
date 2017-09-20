@@ -1,0 +1,54 @@
+curl -XPUT localhost:9200/_template/tweet -d '
+{
+  "template": "tweet-*", 
+  "settings":{
+     "index":{
+        "analysis":{
+           "tokenizer" : {
+               "kuromoji" : {
+                  "type": "kuromoji_tokenizer",
+                  "mode": "normal"
+               }
+           },
+           "analyzer" : {
+               "japanese" : {
+                   "type" : "custom",
+                   "tokenizer" : "kuromoji"
+               }
+           }
+        }
+     }
+  },
+  "mappings":{
+    "tweet":{
+      "properties":{
+        "created_at" : {
+          "type" : "date",
+          "format" : "strict_date_optional_time||epoch_millis"
+        },
+        "text" : {
+          "type" : "string",
+          "analyzer": "japanese",
+          "fielddata": true
+        },
+        "followers_count": {
+          "type": "long",
+          "index": "not_analyzed"
+        },
+        "id_str": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "screen_name": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "name": {
+          "type": "string",
+          "index": "not_analyzed"
+        }
+      }
+    }
+  }
+}'
+
