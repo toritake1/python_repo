@@ -20,6 +20,8 @@ def archive(screen_name):
     #    keywords = yaml.load(file)
     #query_string = ' OR '.join(keywords)
 
+    #screen_name = 'idcfrontier'
+
     # Twitter検索用のクライアント生成
     auth = OAuthHandler(config.CONSUMER_KEY, config.CONSUMER_SECRET)
     auth.set_access_token(config.ACCESS_TOKEN_KEY, config.ACCESS_TOKEN_SECRET)
@@ -58,7 +60,7 @@ def archive(screen_name):
     # max_tweet_countには大きな値を設定しておく。
     tweet_count = 0
     #max_tweet_count = 100000
-    max_tweet_count = 10
+    max_tweet_count = 20
 
     print ('最大{0}個のつぶやきを収集します。'.format(max_tweet_count))
     while tweet_count < max_tweet_count:
@@ -94,10 +96,15 @@ def archive(screen_name):
             JST = timezone('Asia/Tokyo')
 
             for tweet in statuses:
+               if ('retweeted_status' in tweet):
+                  pass
+               else:
                 tweet2 = {}
                 tweet2['id_str'] = tweet['id_str']
                 tweet2['text'] = tweet['text']
                 tweet2['created_at'] = str(parser.parse(tweet['created_at']).astimezone(JST).isoformat())
+                tweet2['favorite_count'] = tweet['favorite_count']
+                tweet2['retweet_count'] = tweet['retweet_count']
                 tweet2['screen_name'] = tweet['user']['screen_name']
                 tweet2['name'] = tweet['user']['name']
                 tweet2['followers_count'] = tweet['user']['followers_count']

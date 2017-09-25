@@ -35,6 +35,12 @@ curl -XPUT localhost:9200/_template/tweet -d '
           "type": "long",
           "index": "not_analyzed"
         },
+        "favorite_count": {
+          "type": "long"
+        },
+        "retweet_count": {
+          "type": "long"
+        },
         "id_str": {
           "type": "string",
           "index": "not_analyzed"
