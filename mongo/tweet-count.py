@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
+#
+# usage : python tweet-count.py 2017-09-01 2017-09-26
+#
 
 from pymongo import MongoClient
 import pandas as pd
 import csv, operator
 import os
+import sys
+
+argvs = sys.argv
  
 # mongo
 client = MongoClient('localhost', 27017)
@@ -18,7 +24,7 @@ f.write('screen_name' + ',' + 'count' + "\n")
 
 # user.csvからscreen_nameを読み込んで、count.csvに書き込む
 for sn in df_user['screen_name']:
-   count = db.tweet.find({'user.screen_name' : sn},{'user.screen_name':1}).count()
+   count = db.tweet.find({'screen_name' : sn, "created_at": {"$gte" : argvs[1]+"T00:00:00", "$lte" : argvs[2]+"T23:59:59"}},{'screen_name':1}).count()
    f.write(sn + ',' + str(count) + "\n")
 f.close()
 
