@@ -40,12 +40,11 @@ def archive(screen_name):
     tweet_collection = db.tweet
 
     # 取得済のつぶやきの中から最新のつぶやきを取得し、そのつぶやきのid以降を取得するように設定しておく。
-    #last_tweet = tweet_collection.find_one({'screen_name' : screen_name}).sort(['created_at', pymongo.DESCENDING])
-    mongo_find = tweet_collection.find_one({'user.screen_name' : screen_name})
+    mongo_find = tweet_collection.find_one({'screen_name' : screen_name})
     if mongo_find is None:
        since_id = None
     else:
-       for last_tweet in list(tweet_collection.find({'user.screen_name' : 'soichi22222'}).sort('created_at',-1).limit(1)):
+       for last_tweet in list(tweet_collection.find({'screen_name' : screen_name}).sort('created_at',-1).limit(1)):
           since_id = last_tweet['id_str']
     # 初回の検索時は、max_idの設定をしないように-1を設定しておく。
     max_id = -1
@@ -81,11 +80,21 @@ def archive(screen_name):
 
             tweet_count += len(statuses)
             print (screen_name +  ' の{0}個のつぶやきを取得しました。'.format(tweet_count))
+            JST = timezone('Asia/Tokyo')
             for tweet in statuses:
                if ('retweeted_status' in tweet):
                   pass
                else:
-                  result = tweet_collection.insert(tweet)
+                  tweet2 = {}
+                  tweet2['id_str'] = tweet['id_str']
+                  tweet2['text'] = tweet['text']
+                  tweet2['created_at'] = str(parser.parse(tweet['created_at']).astimezone(JST).isoformat())
+                  tweet2['favorite_count'] = tweet['favorite_count']
+                  tweet2['retweet_count'] = tweet['retweet_count']
+                  tweet2['screen_name'] = tweet['user']['screen_name']
+                  tweet2['name'] = tweet['user']['name']
+                  tweet2['followers_count'] = tweet['user']['followers_count']
+                  result = tweet_collection.insert(tweet2)
                   print ('MongoDBに保存しました。IDは、{0}です。'.format(result))
  
             # 最後に取得したTweetのIDで更新する。
