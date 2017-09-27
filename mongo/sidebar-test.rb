@@ -38,10 +38,11 @@ g.minimum_value = 0
 count_array = []
 count = table[:count]
 count_array = count
-g.data('ツイート数', [count_array[0], count_array[1]],'#cc0000')
+g.data('ツイート数', [count_array[0], count_array[1],count_array[2]],'#cc0000')
 
 #凡例を表示しない
 g.hide_legend = false
+#g.hide_legend = true
   
 #タイトルを表示しない
 g.hide_title = true
@@ -54,7 +55,7 @@ g.hide_line_markers = false
 name_array = []
 name= table[:screen_name]
 name_array = name
-g.labels = {0 => name_array[0], 1 => name_array[1]}
+g.labels = {0 => name_array[0], 1 => name_array[1], 2 => name_array[2]}
    
 #ラベル、目盛り等補助情報のフォントサイズ。デフォルト20pt
 g.marker_font_size = 16
