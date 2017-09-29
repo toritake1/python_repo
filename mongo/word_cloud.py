@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pandas as pd
-import MeCab
+import MeCab as mc
 import re
 import numpy as np
 from wordcloud import WordCloud, ImageColorGenerator
@@ -10,6 +10,19 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from os import path
 from PIL import Image
+from pymongo import MongoClient
+
+client = MongoClient('localhost', 27017)
+db = client.twitter
+
+f = open('tweet_text.csv', 'w')
+f.write('screen_name' + ',' + 'text' + "\n")
+
+for record in db.tweet.find( {'$and' : [{'screen_name' : 'sugitaLOV'},{"created_at": {"$gte" : "2017-09-19T00:00:00", "$lte" : "2017-09-19T23:59:59"}}]}):
+   f.write(record['screen_name'] + ',' + record['text'] + "\n")
+
+f.close()
+
 
 def mecab_analysis(text):
     t = mc.Tagger('-Ochasen -d /usr/lib64/mecab/dic/mecab-ipadic-neologd/')
@@ -25,6 +38,7 @@ def mecab_analysis(text):
         if node is None:
             break
     return output
+
 
 def create_wordcloud(text):
 
@@ -43,19 +57,18 @@ def create_wordcloud(text):
                           stopwords=set(stop_words)).generate(text)
 
     d = path.dirname(__file__)
-    wordcloud.to_file(path.join(d, "pycloud.png"))
+    wordcloud.to_file(path.join(d, "word_cloud.png"))
 
     plt.figure(figsize=(15,12))
     plt.imshow(wordcloud)
     plt.axis("off")
     #plt.show()
     
-tweets = pd.read_csv('test.csv')
-#texts = " ".join(tweets.text.values)
+tweets = pd.read_csv('tweet_text.csv')
+texts = " ".join(tweets.text.values)
 #print texts
-#word = text_parse(texts)
+word = mecab_analysis(texts)
 #print word
 
-#wordlist = get_wordlist_from_QiitaURL(url)
-create_wordcloud(" ".join(tweets.text.values).decode('utf-8'))
+create_wordcloud(" ".join(word).decode('utf-8'))
 
