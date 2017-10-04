@@ -5,10 +5,10 @@ import json
 import datetime, time, sys
 from abc import ABCMeta, abstractmethod
  
-CK = 'hHT8XYqZ82XORyB2mJsH8Vea7'                             # Consumer Key
-CS = 'fzuUShTzcrgZyub6VDtrDfTkjq37Ebetwd8uRP27QBh47Z24Dz'    # Consumer Secret
-AT = '4659503593-LRMk3RNnpaJuDHkhb0pfXRtR1wr1SnYO77nyRqn'    # Access Token
-AS = '1lxF7OLslZADMwt4KiGyldewjLujiQPZabDorkpRoM7Fy'         # Accesss Token Secert
+CK = 'xxxx'                             # Consumer Key
+CS = 'xxxx'    # Consumer Secret
+AT = 'xxxx'    # Access Token
+AS = 'xxxx'         # Accesss Token Secert
  
 class TweetsGetter(object):
     __metaclass__ = ABCMeta
